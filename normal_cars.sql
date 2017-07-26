@@ -62,17 +62,8 @@ INSERT INTO years (year) (
 -- 17 rows
 
 
--- TESTING
--- SELECT old.model_code "old model_code", old.model_title "old model_title", models.model_code "new model_code", models.model_title "new model_title", models.id "new model_id", old.year "old year", years.year "new year", years.id "new year id"
--- FROM car_models old
--- JOIN models
--- ON old.model_code = models.model_code
--- JOIN years
--- ON old.year = years.year
--- ORDER BY models.id;
-
 INSERT INTO model_years (models_id, years_id) (
-  SELECT DISTINCT models.id , years.id
+  SELECT DISTINCT models.id, years.id
   FROM car_models old
   JOIN models
   ON old.model_code = models.model_code
@@ -82,3 +73,44 @@ INSERT INTO model_years (models_id, years_id) (
 );
 -- 22338 records
 
+
+-- 7. In normal_cars.sql Create a query to get a list of all make_title values in the car_models table. Without any duplicate rows, this should have 71 results.
+
+SELECT make_title
+FROM makes;
+
+
+-- 8. In normal_cars.sql Create a query to list all model_title values where the make_code is 'VOLKS' Without any duplicate rows, this should have 27 results.
+
+SELECT model_title
+FROM models
+JOIN makes
+ON makes.id = models.makes_id
+WHERE makes.make_code = 'VOLKS';
+
+
+-- 9. In normal_cars.sql Create a query to list all make_code, model_code, model_title, and year from car_models where the make_code is 'LAM'. Without any duplicate rows, this should have 136 rows.
+
+SELECT makes.make_code, models.model_code, models.model_title, years.year
+FROM model_years m_y
+JOIN models
+ON m_y.models_id = models.id
+JOIN years
+ON m_y.years_id = years.id
+JOIN makes
+ON models.makes_id = makes.id
+WHERE make_code = 'LAM';
+
+
+-- 10. In normal_cars.sql Create a query to list all fields from all car_models in years between 2010 and 2015. Without any duplicate rows, this should have 7884 rows.
+-- all fields being make_code, make_title, model_code, model_title, and year
+
+SELECT makes.make_code, makes.make_title, models.model_code, models.model_title, years.year
+FROM model_years m_y
+JOIN models
+ON m_y.models_id = models.id
+JOIN years
+ON m_y.years_id = years.id
+JOIN makes
+ON models.makes_id = makes.id
+WHERE years.year BETWEEN 2010 AND 2015;
